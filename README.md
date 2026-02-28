@@ -17,6 +17,29 @@ Upgraded PyTorch to 2.10.0 and switched CUDA from 12.9 (cu129) to 12.8 (cu128) f
 
 参考 / References: [Issue #365](https://github.com/remsky/Kokoro-FastAPI/issues/365) · [PR #390](https://github.com/remsky/Kokoro-FastAPI/pull/390)
 
+### Kokoro-82M-v1.1-zh 迁移（中文优化 + 宿主机可扩展模型/语音目录）
+
+本分支已切换到 `hexgrad/Kokoro-82M-v1.1-zh`，并参考社区方案（Issue #214 / PR #237）完成当前代码基线适配。
+
+- 默认模型与语音
+    - 默认模型文件：`v1_1_zh/kokoro-v1_1-zh.pth`
+    - 默认语音：`zf_094`
+    - 默认 `REPO_ID`：`hexgrad/Kokoro-82M-v1.1-zh`
+- 中英混读支持
+    - `lang_code='z'` 时启用 `en_callable`，由英文 pipeline 处理英文片段音素，避免中英混合文本英文丢失
+- 下载与依赖
+    - `docker/scripts/download_model.py` 改为从 HuggingFace 下载 `v1.1-zh` 模型与 `voices/*.pt`
+    - 新增依赖：`huggingface-hub`
+- Docker 宿主机映射（便于扩展语音包）
+    - CPU: `docker/cpu/models -> /app/api/src/models/v1_1_zh`
+    - CPU: `docker/cpu/voices -> /app/api/src/voices/v1_1_zh`
+    - GPU: `docker/gpu/models -> /app/api/src/models/v1_1_zh`
+    - GPU: `docker/gpu/voices -> /app/api/src/voices/v1_1_zh`
+    - ROCm: `docker/rocm/models -> /app/api/src/models/v1_1_zh`
+    - ROCm: `docker/rocm/voices -> /app/api/src/voices/v1_1_zh`
+
+参考 / References: [Issue #214](https://github.com/remsky/Kokoro-FastAPI/issues/214) · [PR #237](https://github.com/remsky/Kokoro-FastAPI/pull/237)
+
 ---
 
 <p align="center">
@@ -87,7 +110,7 @@ docker run --gpus all -p 8880:8880 ghcr.io/remsky/kokoro-fastapi-gpu:latest  #NV
         # MPS (Apple's GPU acceleration) support is planned but not yet available.
 
         # Models will auto-download, but if needed you can manually download:
-        python docker/scripts/download_model.py --output api/src/models/v1_0
+        python docker/scripts/download_model.py --output api/src/models/v1_1_zh --voices-output api/src/voices/v1_1_zh
 
         # Or run directly via UV:
         ./start-gpu.sh  # For GPU support

@@ -11,7 +11,7 @@ RUN apt-get update -y &&  \
     mv /root/.local/bin/uv /usr/local/bin/ && \
     mv /root/.local/bin/uvx /usr/local/bin/ && \
     useradd -m -u 1000 appuser && \
-    mkdir -p /app/api/src/models/v1_0 && \
+    mkdir -p /app/api/src/models/v1_1_zh /app/api/src/voices/v1_1_zh && \
     chown -R appuser:appuser /app
 
 USER appuser
@@ -43,6 +43,10 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app:/app/api \
     UV_LINK_MODE=copy \
     USE_GPU=false \
+    REPO_ID=hexgrad/Kokoro-82M-v1.1-zh \
+    DEFAULT_VOICE=zf_094 \
+    KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth \
+    VOICES_DIR=/app/api/src/voices/v1_1_zh \
     PHONEMIZER_ESPEAK_PATH=/usr/bin \
     PHONEMIZER_ESPEAK_DATA=/usr/share/espeak-ng-data \
     ESPEAK_DATA_PATH=/usr/share/espeak-ng-data \
@@ -51,7 +55,7 @@ ENV PYTHONUNBUFFERED=1 \
 ENV DOWNLOAD_MODEL=true
 # Download model if enabled
 RUN if [ "$DOWNLOAD_MODEL" = "true" ]; then \
-    python download_model.py --output api/src/models/v1_0; \
+    python download_model.py --output api/src/models/v1_1_zh --voices-output api/src/voices/v1_1_zh; \
     fi
 
 # Run FastAPI server through entrypoint.sh

@@ -1,8 +1,8 @@
 {
     "models": {
-        "tts-1": "kokoro-v1_0",
-        "tts-1-hd": "kokoro-v1_0",
-        "kokoro": "kokoro-v1_0"
+        "tts-1": "kokoro-v1_1-zh",
+        "tts-1-hd": "kokoro-v1_1-zh",
+        "kokoro": "kokoro-v1_1-zh"
     },
     "voices": {
         "alloy": "am_v0adam",

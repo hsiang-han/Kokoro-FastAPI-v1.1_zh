@@ -16,10 +16,16 @@ services:
       volumes:
         - ./kokoro-tts/config:/root/.config/miopen
         - ./kokoro-tts/cache:/root/.cache/miopen
+        - ./models:/app/api/src/models/v1_1_zh
+        - ./voices:/app/api/src/voices/v1_1_zh
       ports:
         - 8880:8880
       environment:
         - USE_GPU=true
+        - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+        - DEFAULT_VOICE=zf_094
+        - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+        - VOICES_DIR=/app/api/src/voices/v1_1_zh
         - TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1
         # IMPORTANT: This is only required for RDNA 2 GPUs. You do not need the following steps if you use GPUS that are RDNA 1 (gfx1030) or older.
         # ROCm's MIOpen libray will be slow if it has to figure out the optimal kernel shapes for each model

@@ -7,6 +7,8 @@ services:
       dockerfile: docker/gpu/Dockerfile
     volumes:
       - ../../api:/app/api
+      - ./models:/app/api/src/models/v1_1_zh
+      - ./voices:/app/api/src/voices/v1_1_zh
     user: "1001:1001"  # Ensure container runs as UID 1001 (appuser)
     ports:
       - "8880:8880"
@@ -14,6 +16,10 @@ services:
       - PYTHONPATH=/app:/app/api
       - USE_GPU=true
       - PYTHONUNBUFFERED=1
+      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+      - DEFAULT_VOICE=zf_094
+      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+      - VOICES_DIR=/app/api/src/voices/v1_1_zh
       - API_LOG_LEVEL=DEBUG
     deploy:
       resources:

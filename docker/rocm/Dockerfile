@@ -29,10 +29,10 @@ RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommen
 
     # Create non-root user and set up directories and permissions
     && useradd -m -u 1001 appuser \
-    && mkdir -p /app/api/src/models/v1_0 \
+    && mkdir -p /app/api/src/models/v1_1_zh /app/api/src/voices/v1_1_zh \
     && chown -R appuser:appuser /app \
     # Models folder
-    && mkdir -p /app/api/src/models/v1_0
+    && mkdir -p /app/api/src/models/v1_1_zh
 
 USER appuser
 WORKDIR /app
@@ -75,6 +75,10 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH" \
     UV_LINK_MODE=copy \
     USE_GPU=true \
+    REPO_ID=hexgrad/Kokoro-82M-v1.1-zh \
+    DEFAULT_VOICE=zf_094 \
+    KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth \
+    VOICES_DIR=/app/api/src/voices/v1_1_zh \
     DOWNLOAD_MODEL=true \
     DEVICE="gpu"
 

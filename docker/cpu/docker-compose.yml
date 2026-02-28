@@ -6,10 +6,16 @@ services:
       dockerfile: docker/cpu/Dockerfile
     volumes:
       - ../../api:/app/api
+      - ./models:/app/api/src/models/v1_1_zh
+      - ./voices:/app/api/src/voices/v1_1_zh
     ports:
       - "8880:8880"
     environment:
       - PYTHONPATH=/app:/app/api
+      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+      - DEFAULT_VOICE=zf_094
+      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+      - VOICES_DIR=/app/api/src/voices/v1_1_zh
       # ONNX Optimization Settings for vectorized operations
       - ONNX_NUM_THREADS=8  # Maximize core usage for vectorized ops
       - ONNX_INTER_OP_THREADS=4  # Higher inter-op for parallel matrix operations

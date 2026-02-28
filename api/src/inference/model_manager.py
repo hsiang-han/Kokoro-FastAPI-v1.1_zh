@@ -71,7 +71,7 @@ class ModelManager:
                 voice_path = await paths.get_voice_path(settings.default_voice)
 
                 # Warm up with short text
-                warmup_text = "Warmup text for initialization."
+                warmup_text = "初始化的预热文本。"
                 # Use default voice name for warmup
                 voice_name = settings.default_voice
                 logger.debug(f"Using default voice '{voice_name}' for warmup")
@@ -89,7 +89,7 @@ class ModelManager:
 Model files not found! You need to download the Kokoro V1 model:
 
 1. Download model using the script:
-   python docker/scripts/download_model.py --output api/src/models/v1_0
+    python docker/scripts/download_model.py --output api/src/models/v1_1_zh --voices-output api/src/voices/v1_1_zh
 
 2. Or set environment variable in docker-compose:
    DOWNLOAD_MODEL=true

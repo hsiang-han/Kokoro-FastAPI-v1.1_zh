@@ -48,7 +48,9 @@ class KokoroV1(BaseModelBackend):
             logger.info(f"Model path: {model_path}")
 
             # Load model and let KModel handle device mapping
-            self._model = KModel(config=config_path, model=model_path).eval()
+            self._model = KModel(
+                config=config_path, model=model_path, repo_id=settings.repo_id
+            ).eval()
             # For MPS, manually move ISTFT layers to CPU while keeping rest on MPS
             if self._device == "mps":
                 logger.info(
@@ -65,6 +67,9 @@ class KokoroV1(BaseModelBackend):
         except Exception as e:
             raise RuntimeError(f"Failed to load Kokoro model: {e}")
 
+    def _en_callable(self, text: str) -> str:
+        return next(self._pipelines["a"](text)).phonemes
+
     def _get_pipeline(self, lang_code: str) -> KPipeline:
         """Get or create pipeline for language code.
 
@@ -77,11 +82,23 @@ class KokoroV1(BaseModelBackend):
         if not self._model:
             raise RuntimeError("Model not loaded")
 
+        if lang_code == "z" and "a" not in self._pipelines:
+            logger.info("Creating helper English pipeline for mixed zh-en text")
+            self._pipelines["a"] = KPipeline(
+                lang_code="a", model=False, repo_id=settings.repo_id
+            )
+
         if lang_code not in self._pipelines:
             logger.info(f"Creating new pipeline for language code: {lang_code}")
-            self._pipelines[lang_code] = KPipeline(
-                lang_code=lang_code, model=self._model, device=self._device
-            )
+            pipeline_kwargs = {
+                "lang_code": lang_code,
+                "model": self._model,
+                "device": self._device,
+                "repo_id": settings.repo_id,
+            }
+            if lang_code == "z":
+                pipeline_kwargs["en_callable"] = self._en_callable
+            self._pipelines[lang_code] = KPipeline(**pipeline_kwargs)
         return self._pipelines[lang_code]
 
     async def generate_from_tokens(

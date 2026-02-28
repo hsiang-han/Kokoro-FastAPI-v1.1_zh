@@ -35,7 +35,7 @@ def mock_openai_mappings():
     with patch(
         "api.src.routers.openai_compatible._openai_mappings",
         {
-            "models": {"tts-1": "kokoro-v1_0", "tts-1-hd": "kokoro-v1_0"},
+            "models": {"tts-1": "kokoro-v1_1-zh", "tts-1-hd": "kokoro-v1_1-zh"},
             "voices": {"alloy": "am_adam", "nova": "bf_isabella"},
         },
     ):
