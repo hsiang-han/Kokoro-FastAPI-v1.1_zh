@@ -46,7 +46,7 @@ dependencies = [
 gpu = ["torch==2.10.0+cu128"]
 cpu = ["torch==2.10.0"]
 rocm = [
-    "torch==2.10.0+rocm7.1",
+    "torch==2.9.1+rocm7.1",
     "pytorch-triton-rocm>=3.5.0",
 ]
 test = [
