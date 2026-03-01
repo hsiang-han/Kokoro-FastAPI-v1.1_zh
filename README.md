@@ -1,5 +1,3 @@
-### 构建与测试状态 / Build & Test
-
 [![CI](https://github.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/actions/workflows/ci.yml)
 
 ## 本版本变更说明 / Fork Changes
