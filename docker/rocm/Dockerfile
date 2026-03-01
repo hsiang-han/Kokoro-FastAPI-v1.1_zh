@@ -28,7 +28,16 @@ RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommen
     && mv /root/.local/bin/uvx /usr/local/bin/ \
 
     # Create non-root user and set up directories and permissions
-    && useradd -m -u 1000 appuser \
+        && if getent passwd 1000 >/dev/null; then \
+                 EXISTING_USER="$(getent passwd 1000 | cut -d: -f1)"; \
+                 if [ "$EXISTING_USER" != "appuser" ]; then usermod -l appuser "$EXISTING_USER"; fi; \
+                 usermod -d /home/appuser -m appuser || true; \
+             else \
+                 useradd -m -u 1000 appuser; \
+             fi \
+        && APP_GID="$(id -g appuser)" \
+        && getent group appuser >/dev/null || groupadd -g "$APP_GID" -o appuser \
+        && usermod -g appuser appuser \
     && mkdir -p /app/api/src/models/v1_1_zh /app/api/src/voices/v1_1_zh \
     && chown -R appuser:appuser /app \
     # Models folder
