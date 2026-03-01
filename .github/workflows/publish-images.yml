@@ -45,14 +45,24 @@ jobs:
         run: |
           docker buildx bake cpu \
             --set cpu.platform=linux/amd64,linux/arm64 \
-            --set cpu.tags[0]=${REGISTRY}/${OWNER_LC}/${REPO_LC}-cpu:${VERSION} \
-            --set cpu.tags[1]=${REGISTRY}/${OWNER_LC}/${REPO_LC}-cpu:latest \
+            --set cpu.tags=${REGISTRY}/${OWNER_LC}/${REPO_LC}-cpu:${VERSION} \
             --push
+
+      - name: Create CPU latest tag alias
+        run: |
+          docker buildx imagetools create \
+            --tag ${REGISTRY}/${OWNER_LC}/${REPO_LC}-cpu:latest \
+            ${REGISTRY}/${OWNER_LC}/${REPO_LC}-cpu:${VERSION}
 
       - name: Build and push GPU image
         run: |
           docker buildx bake gpu \
             --set gpu.platform=linux/amd64 \
-            --set gpu.tags[0]=${REGISTRY}/${OWNER_LC}/${REPO_LC}-gpu:${VERSION} \
-            --set gpu.tags[1]=${REGISTRY}/${OWNER_LC}/${REPO_LC}-gpu:latest \
+            --set gpu.tags=${REGISTRY}/${OWNER_LC}/${REPO_LC}-gpu:${VERSION} \
             --push
+
+      - name: Create GPU latest tag alias
+        run: |
+          docker buildx imagetools create \
+            --tag ${REGISTRY}/${OWNER_LC}/${REPO_LC}-gpu:latest \
+            ${REGISTRY}/${OWNER_LC}/${REPO_LC}-gpu:${VERSION}
