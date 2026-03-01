@@ -8,13 +8,6 @@
 PyTorch 升级至 2.10.0，CUDA 路线切换到 cu128（12.8），用于适配 NVIDIA Blackwell（RTX 5060–5090，sm_120）。
 Upgraded to PyTorch 2.10.0 with CUDA cu128 (12.8) for NVIDIA Blackwell support.
 
-| 文件 / File | 变更 / Change |
-|---|---|
-| `pyproject.toml` | `torch 2.8.0+cu129` → `torch 2.10.0+cu128` |
-| `docker/gpu/Dockerfile` | 基础镜像 / Base image: `cuda:12.9.1` → `cuda:12.8.1-cudnn-devel` |
-| `pyproject.toml` (ROCm) | `torch 2.8.0+rocm6.4` → `torch 2.10.0+rocm7.1` |
-| `docker/rocm/Dockerfile` | 基础镜像 / Base image: `rocm 6.4.4` → `rocm 7.1.1` |
-
 参考 / References: [Issue #365](https://github.com/remsky/Kokoro-FastAPI/issues/365) · [PR #390](https://github.com/remsky/Kokoro-FastAPI/pull/390)
 
 ### Kokoro-82M-v1.1-zh 迁移（中文优化 + 宿主机可扩展模型/语音目录）
