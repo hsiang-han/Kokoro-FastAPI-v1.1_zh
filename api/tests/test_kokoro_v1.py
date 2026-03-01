@@ -101,7 +101,7 @@ def test_get_pipeline_creates_new(kokoro_backend):
 
         # Should create new pipeline with correct params
         mock_kpipeline.assert_called_once_with(
-            lang_code="e", model=kokoro_backend._model, device=kokoro_backend._device
+            lang_code="e", model=kokoro_backend._model, device=kokoro_backend._device, repo_id="hexgrad/Kokoro-82M-v1.1-zh"
         )
         assert pipeline_e == mock_pipeline
         assert kokoro_backend._pipelines["e"] == mock_pipeline
