@@ -1,3 +1,7 @@
+### 构建与测试状态 / Build & Test
+
+[![CI](https://github.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/actions/workflows/ci.yml)
+
 ## 本版本变更说明 / Fork Changes
 
 > 基于 [remsky/Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) 的分支版本，以下为关键差异。
@@ -84,6 +88,9 @@ Upgraded to PyTorch 2.10.0 with CUDA cu128 (12.8) for NVIDIA Blackwell support.
             ```powershell
             Invoke-RestMethod http://localhost:8880/v1/models
             ```
+  - API 服务地址：`http://localhost:8880`
+  - API 文档地址：`http://localhost:8880/docs`
+  - Web 界面地址：`http://localhost:8880/web`
 
 6. 常用后续操作
         - 停止服务：在当前终端按 `Ctrl + C`
@@ -191,6 +198,10 @@ services:
     - `/mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices/v1_1_zh/`
 3. 在容器日志看到 `Uvicorn running on` 后，浏览器打开：`http://<你的UnraidIP>:8880/docs`
 4. 能打开接口文档页面即部署成功
+
+- API 服务地址：http://localhost:8880
+- API 文档地址：http://localhost:8880/docs
+- Web 界面地址：http://localhost:8880/web
 
 #### 5) 常见问题
 
