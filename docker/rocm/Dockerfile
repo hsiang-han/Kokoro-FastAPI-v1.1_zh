@@ -28,7 +28,7 @@ RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommen
     && mv /root/.local/bin/uvx /usr/local/bin/ \
 
     # Create non-root user and set up directories and permissions
-    && useradd -m -u 1001 appuser \
+    && useradd -m -u 1000 appuser \
     && mkdir -p /app/api/src/models/v1_1_zh /app/api/src/voices/v1_1_zh \
     && chown -R appuser:appuser /app \
     # Models folder

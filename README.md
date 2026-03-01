@@ -129,60 +129,64 @@ Upgraded to PyTorch 2.10.0 with CUDA cu128 (12.8) for NVIDIA Blackwell support.
 **GPU（NVIDIA）**
 
 ```yaml
-name: kokoro-fastapi-gpu
+name: kokoro-fastapi-v1_1_zh-gpu
 
 services:
-    kokoro-fastapi:
-        image: ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-gpu:latest
-        container_name: kokoro-fastapi-gpu
-        restart: unless-stopped
-        ports:
-            - "8880:8880"
-        environment:
-            - USE_GPU=true
-            - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
-            - DEFAULT_VOICE=zf_094
-            - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
-            - VOICES_DIR=/app/api/src/voices/v1_1_zh
-            - DEFAULT_VOICE_CODE=z
-            - API_LOG_LEVEL=INFO
-        volumes:
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/output:/app/output
-        deploy:
-            resources:
-                reservations:
-                    devices:
-                        - driver: nvidia
-                          count: all
-                          capabilities: [gpu]
+  kokoro-fastapi:
+    image: ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-gpu:latest
+    container_name: kokoro-fastapi-v1_1_zh-gpu
+    labels:
+      net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/master/assets/unraid-icon.png
+    volumes:
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
+    ports:
+      - "8880:8880"
+    environment:
+      - PYTHONPATH=/app:/app/api
+      - USE_GPU=true
+      - PYTHONUNBUFFERED=1
+      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+      - DEFAULT_VOICE=zf_094
+      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+      - VOICES_DIR=/app/api/src/voices/v1_1_zh
+      - DEFAULT_VOICE_CODE=z
+      - API_LOG_LEVEL=DEBUG
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 ```
 
 **CPU**
 
 ```yaml
-name: kokoro-fastapi-cpu
+name: kokoro-fastapi-v1_1_zh-cpu
 
 services:
-    kokoro-fastapi:
-        image: ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-cpu:latest
-        container_name: kokoro-fastapi-cpu
-        restart: unless-stopped
-        ports:
-            - "8880:8880"
-        environment:
-            - USE_GPU=false
-            - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
-            - DEFAULT_VOICE=zf_094
-            - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
-            - VOICES_DIR=/app/api/src/voices/v1_1_zh
-            - DEFAULT_VOICE_CODE=z
-            - API_LOG_LEVEL=INFO
-        volumes:
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
-            - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/output:/app/output
+  kokoro-fastapi:
+    image: ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-cpu:latest
+    container_name: kokoro-fastapi-v1_1_zh-cpu
+    labels:
+      net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/master/assets/unraid-icon.png
+    volumes:
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
+    ports:
+      - "8880:8880"
+    environment:
+      - PYTHONPATH=/app:/app/api
+      - USE_GPU=false
+      - PYTHONUNBUFFERED=1
+      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+      - DEFAULT_VOICE=zf_094
+      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+      - VOICES_DIR=/app/api/src/voices/v1_1_zh
+      - DEFAULT_VOICE_CODE=z
+      - API_LOG_LEVEL=DEBUG
 ```
 
 #### 4) 部署与验证
@@ -194,12 +198,37 @@ services:
 3. 在容器日志看到 `Uvicorn running on` 后，浏览器打开：`http://<你的UnraidIP>:8880/docs`
 4. 能打开接口文档页面即部署成功
 
-#### 5) 新手常见问题
+#### 5) 常见问题
 
 - 端口冲突：把 YAML 里的 `8880:8880` 改成 `18880:8880`（外部端口可改）
 - 拉取镜像失败：确认 Unraid 主机能访问 GHCR，必要时先手动 pull
 - GPU 不生效：确认已安装 NVIDIA 驱动插件并启用 Docker 的 NVIDIA runtime
 - 想固定版本：将 `:latest` 改为固定 tag（如 `:v0.2.4-zh`）
+- 挂载目录权限错误（`Permission denied`）：见下方"权限问题"说明
+
+#### 6) 挂载目录权限问题（Permission Denied）
+
+容器内进程以非 root 用户 `appuser`（UID 1000）运行。如果宿主机挂载目录的所有者不是 UID 1000，容器将无法写入，出现类似错误：
+
+```
+PermissionError: [Errno 13] Permission denied: 'api/src/models/v1_1_zh'
+```
+
+**修复方法（在 Unraid 终端执行，仅需首次部署前操作一次）：**
+
+```bash
+# 1. 预创建挂载目录
+mkdir -p /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models/v1_1_zh
+mkdir -p /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices/v1_1_zh
+
+# 2. 将目录所有者设为 UID 1000（容器内 appuser）
+chown -R 1000:1000 /mnt/user/appdata/kokoro-fastapi-v1_1_zh
+
+# 3. 设置读写权限
+chmod -R 775 /mnt/user/appdata/kokoro-fastapi-v1_1_zh
+```
+
+> **提示**：Unraid 默认以 root 登录终端，以上命令可直接执行，仅首次部署前需要操作一次。
 
 ## 镜像标签策略 / Image Tagging Strategy
 

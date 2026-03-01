@@ -1,21 +1,23 @@
-name: kokoro-fastapi-cpu
+name: kokoro-fastapi-v1_1_zh-cpu
 
 services:
   kokoro-fastapi:
-    image: ${KOKORO_IMAGE:-ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-cpu:latest}
-    container_name: kokoro-fastapi-cpu
-    restart: unless-stopped
-    ports:
-      - "${KOKORO_PORT:-8880}:8880"
-    environment:
-      - USE_GPU=false
-      - REPO_ID=${REPO_ID:-hexgrad/Kokoro-82M-v1.1-zh}
-      - DEFAULT_VOICE=${DEFAULT_VOICE:-zf_094}
-      - KOKORO_V1_FILE=${KOKORO_V1_FILE:-v1_1_zh/kokoro-v1_1-zh.pth}
-      - VOICES_DIR=/app/api/src/voices/v1_1_zh
-      - DEFAULT_VOICE_CODE=${DEFAULT_VOICE_CODE:-}
-      - API_LOG_LEVEL=${API_LOG_LEVEL:-INFO}
+    image: ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-cpu:latest
+    container_name: kokoro-fastapi-v1_1_zh-cpu
+    labels:
+      net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/master/assets/unraid-icon.png
     volumes:
-      - ${KOKORO_MODELS_PATH:-/mnt/user/appdata/kokoro-fastapi-v1_1_zh/models}:/app/api/src/models
-      - ${KOKORO_VOICES_PATH:-/mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices}:/app/api/src/voices
-      - ${KOKORO_OUTPUT_PATH:-/mnt/user/appdata/kokoro-fastapi-v1_1_zh/output}:/app/output
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
+      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
+    ports:
+      - "8880:8880"
+    environment:
+      - PYTHONPATH=/app:/app/api
+      - USE_GPU=false
+      - PYTHONUNBUFFERED=1
+      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+      - DEFAULT_VOICE=zf_094
+      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+      - VOICES_DIR=/app/api/src/voices/v1_1_zh
+      - DEFAULT_VOICE_CODE=z
+      - API_LOG_LEVEL=DEBUG
