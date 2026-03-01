@@ -42,6 +42,11 @@ DEFAULT_VOICE=zf_094
 DEFAULT_VOICE_CODE=z
 ```
 
+说明：
+
+- 模型文件会落在 `KOKORO_MODELS_PATH/v1_1_zh/`。
+- 语音文件会自动下载到 `KOKORO_VOICES_PATH/v1_1_zh/`（子目录会自动创建）。
+
 ## 2) Unraid App 市场上架
 
 ### A. 准备 Unraid 模板

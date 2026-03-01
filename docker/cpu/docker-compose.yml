@@ -1,13 +1,15 @@
 name: kokoro-fastapi-cpu
 services:
   kokoro-tts:
+    image: kokoro-fastapi-v1.1_zh-cpu
+    container_name: kokoro-fastapi-v1_1_zh-cpu
     build:
       context: ../..
       dockerfile: docker/cpu/Dockerfile
     volumes:
       - ../../api:/app/api
-      - ./models:/app/api/src/models/v1_1_zh
-      - ./voices:/app/api/src/voices/v1_1_zh
+      - ./models:/app/api/src/models
+      - ./voices:/app/api/src/voices
     ports:
       - "8880:8880"
     environment:

@@ -17,9 +17,9 @@
 
   <Config Name="WebUI Port" Target="8880" Default="8880" Mode="tcp" Description="Web/API exposed port" Type="Port" Display="always" Required="true" Mask="false">8880</Config>
 
-  <Config Name="Models Path" Target="/app/api/src/models/v1_1_zh" Default="/mnt/user/appdata/kokoro-fastapi/models" Mode="rw" Description="Host path for model files" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/kokoro-fastapi/models</Config>
+  <Config Name="Models Path" Target="/app/api/src/models" Default="/mnt/user/appdata/kokoro-fastapi/models" Mode="rw" Description="Host path for model files" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/kokoro-fastapi/models</Config>
 
-  <Config Name="Voices Path" Target="/app/api/src/voices/v1_1_zh" Default="/mnt/user/appdata/kokoro-fastapi/voices" Mode="rw" Description="Host path for voice .pt files" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/kokoro-fastapi/voices</Config>
+  <Config Name="Voices Path" Target="/app/api/src/voices" Default="/mnt/user/appdata/kokoro-fastapi/voices" Mode="rw" Description="Host path for voice .pt files" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/kokoro-fastapi/voices</Config>
 
   <Config Name="Output Path" Target="/app/output" Default="/mnt/user/appdata/kokoro-fastapi/output" Mode="rw" Description="Host path for generated output files" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/kokoro-fastapi/output</Config>
 

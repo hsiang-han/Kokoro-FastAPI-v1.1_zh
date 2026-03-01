@@ -1,14 +1,15 @@
-name: kokoro-tts-gpu
+name: kokoro-fastapi-v1_1_zh-gpu
 services:
   kokoro-tts:
-    # image: ghcr.io/remsky/kokoro-fastapi-gpu:v${VERSION}
+    image: kokoro-fastapi-v1.1_zh-gpu
+    container_name: kokoro-fastapi-v1_1_zh-gpu
     build:
       context: ../..
       dockerfile: docker/gpu/Dockerfile
     volumes:
       - ../../api:/app/api
-      - ./models:/mnt/user/appdata/kokoro-fastapi-v1_1_zh/data/src/models/
-      - ./voices:/mnt/user/appdatakokoro-fastapi-v1_1_zh/data/src/voices/
+      - ./models:/app/api/src/models
+      - ./voices:/app/api/src/voices
     user: "1001:1001"  # Ensure container runs as UID 1001 (appuser)
     ports:
       - "8880:8880"

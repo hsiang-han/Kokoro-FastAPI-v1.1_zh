@@ -1,5 +1,9 @@
+name: kokoro-fastapi-v1_1_zh-rocm
+
 services:
   kokoro-tts:
+      image: kokoro-fastapi-v1.1_zh-rocm
+      container_name: kokoro-fastapi-v1_1_zh-rocm
       build:
         context: ../..
         dockerfile: docker/rocm/Dockerfile
@@ -16,8 +20,8 @@ services:
       volumes:
         - ./kokoro-tts/config:/root/.config/miopen
         - ./kokoro-tts/cache:/root/.cache/miopen
-        - ./models:/app/api/src/models/v1_1_zh
-        - ./voices:/app/api/src/voices/v1_1_zh
+        - ./models:/app/api/src/models
+        - ./voices:/app/api/src/voices
       ports:
         - 8880:8880
       environment:

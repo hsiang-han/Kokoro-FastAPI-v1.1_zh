@@ -1,12 +1,12 @@
 ## 本版本变更说明 / Fork Changes
 
-> 本仓库基于 [remsky/Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) 修改，以下为相对上游的主要变更。
-> This repository is forked from [remsky/Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI). Key changes from upstream are listed below.
+> 基于 [remsky/Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) 的分支版本，以下为关键差异。
+> Forked from [remsky/Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI), with key upstream differences listed below.
 
 ### PyTorch & CUDA 升级（支持 RTX 50 系列 GPU）/ PyTorch & CUDA Upgrade (RTX 50-series GPU Support)
 
-升级 PyTorch 至 2.10.0，并将 CUDA 从 12.9（cu129）切换至 12.8（cu128），以获得对 NVIDIA Blackwell 架构（RTX 5060–5090，sm_120）的官方支持。
-Upgraded PyTorch to 2.10.0 and switched CUDA from 12.9 (cu129) to 12.8 (cu128) for official NVIDIA Blackwell architecture support (RTX 5060–5090, sm_120).
+PyTorch 升级至 2.10.0，CUDA 路线切换到 cu128（12.8），用于适配 NVIDIA Blackwell（RTX 5060–5090，sm_120）。
+Upgraded to PyTorch 2.10.0 with CUDA cu128 (12.8) for NVIDIA Blackwell support.
 
 | 文件 / File | 变更 / Change |
 |---|---|
@@ -19,28 +19,74 @@ Upgraded PyTorch to 2.10.0 and switched CUDA from 12.9 (cu129) to 12.8 (cu128) f
 
 ### Kokoro-82M-v1.1-zh 迁移（中文优化 + 宿主机可扩展模型/语音目录）
 
-本分支已切换到 `hexgrad/Kokoro-82M-v1.1-zh`，并参考社区方案（Issue #214 / PR #237）完成当前代码基线适配。
+已迁移到 `hexgrad/Kokoro-82M-v1.1-zh`，并按社区方案完成基线适配（Issue #214 / PR #237）。
 
-- 默认模型与语音
-    - 默认模型文件：`v1_1_zh/kokoro-v1_1-zh.pth`
-    - 默认语音：`zf_094`
-    - 默认 `REPO_ID`：`hexgrad/Kokoro-82M-v1.1-zh`
-- 中英混读支持
-    - `lang_code='z'` 时启用 `en_callable`，由英文 pipeline 处理英文片段音素，避免中英混合文本英文丢失
-- 下载与依赖
-    - `docker/scripts/download_model.py` 改为从 HuggingFace 下载 `v1.1-zh` 模型与 `voices/*.pt`
-    - 新增依赖：`huggingface-hub`
-- Docker 宿主机映射（便于扩展语音包）
-    - CPU: `docker/cpu/models -> /app/api/src/models/v1_1_zh`
-    - CPU: `docker/cpu/voices -> /app/api/src/voices/v1_1_zh`
-    - GPU: `docker/gpu/models -> /app/api/src/models/v1_1_zh`
-    - GPU: `docker/gpu/voices -> /app/api/src/voices/v1_1_zh`
-    - ROCm: `docker/rocm/models -> /app/api/src/models/v1_1_zh`
-    - ROCm: `docker/rocm/voices -> /app/api/src/voices/v1_1_zh`
+- 默认配置：模型 `v1_1_zh/kokoro-v1_1-zh.pth`，语音 `zf_094`，`REPO_ID=hexgrad/Kokoro-82M-v1.1-zh`
+- 中英混读：`lang_code='z'` 时启用 `en_callable`，英文片段由英文 pipeline 处理
+- 下载与依赖：`docker/scripts/download_model.py` 支持下载 v1.1-zh 模型与 `voices/*.pt`，新增依赖 `huggingface-hub`
+- Docker 映射已按 v1.1-zh 模型与语音目录调整（具体挂载路径请以各平台 compose 为准）
 
 参考 / References: [Issue #214](https://github.com/remsky/Kokoro-FastAPI/issues/214) · [PR #237](https://github.com/remsky/Kokoro-FastAPI/pull/237)
 
 ---
+
+## 快速导航 / Quick Navigation
+
+- [测试范围说明 / Testing Scope](#测试范围说明--testing-scope)
+- [免源码部署入口 / No-source Deployment Entry](#免源码部署入口--no-source-deployment-entry)
+- [镜像标签策略 / Image Tagging Strategy](#镜像标签策略--image-tagging-strategy)
+- [最小环境变量 / Minimal Environment Variables](#最小环境变量--minimal-environment-variables)
+- [Get Started](#get-started)
+
+## 测试范围说明 / Testing Scope
+
+- 已完成实测：NVIDIA RTX 50 系列（Blackwell）+ CUDA 路线。
+- 当前未实测：ROCm（受限于测试硬件条件），相关支持为配置级/依赖级适配，欢迎社区反馈。
+
+## 免源码部署入口 / No-source Deployment Entry
+
+- 部署文档：`docs/deployment/unraid-and-prebuilt-images.md`
+- Unraid / Compose Stack（GPU）：`docker/unraid/stack.gpu.image.yml`
+- Unraid / Compose Stack（CPU）：`docker/unraid/stack.cpu.image.yml`
+- Unraid CA 模板：`unraid/templates/kokoro-fastapi-gpu.xml`
+
+## 镜像标签策略 / Image Tagging Strategy
+
+- 推荐生产环境固定版本标签（例如：`v0.2.4-zh`），避免 `latest` 漂移。
+- 建议约定：
+    - GPU：`ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-gpu:v0.2.4-zh`
+    - CPU：`ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-cpu:v0.2.4-zh`
+- `latest` 可用于快速试用，不建议用于可复现部署。
+
+## 最小环境变量 / Minimal Environment Variables
+
+| 变量 | 示例值 | 说明 |
+|---|---|---|
+| `REPO_ID` | `hexgrad/Kokoro-82M-v1.1-zh` | 模型仓库 |
+| `DEFAULT_VOICE` | `zf_094` | 默认语音 |
+| `KOKORO_V1_FILE` | `v1_1_zh/kokoro-v1_1-zh.pth` | 模型权重相对路径 |
+| `VOICES_DIR` | `/app/api/src/voices/v1_1_zh` | 容器内语音目录 |
+| `DEFAULT_VOICE_CODE` | `z`（可选） | 强制语言代码（中英混读建议） |
+| `API_LOG_LEVEL` | `INFO` | 日志等级 |
+
+### 手动准备模型/语音文件时的目录约定（重要）
+
+当你关闭自动下载（例如 `DOWNLOAD_MODEL=false`）并手动放置文件时，请按下面结构准备，避免路径不匹配：
+
+- 容器内模型根目录：`/app/api/src/models`
+- 容器内语音根目录：`/app/api/src/voices`
+- 默认模型文件应位于：`/app/api/src/models/v1_1_zh/kokoro-v1_1-zh.pth`
+- 默认语音目录应位于：`/app/api/src/voices/v1_1_zh/*.pt`
+
+若使用当前 compose 映射：
+
+- `./models:/app/api/src/models`
+- `./voices:/app/api/src/voices`
+
+则宿主机目录应为：
+
+- `./models/v1_1_zh/kokoro-v1_1-zh.pth`
+- `./voices/v1_1_zh/*.pt`
 
 <p align="center">
   <img src="githubbanner.png" alt="Kokoro TTS Banner">
