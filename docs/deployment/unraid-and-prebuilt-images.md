@@ -35,9 +35,8 @@
 ```env
 KOKORO_IMAGE=ghcr.io/hsiang-han/kokoro-fastapi-v1.1_zh-gpu:v1.1.0
 KOKORO_PORT=8880
-KOKORO_MODELS_PATH=/mnt/user/appdata/kokoro-fastapi-v1_1_zh/models
-KOKORO_VOICES_PATH=/mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices
-KOKORO_OUTPUT_PATH=/mnt/user/appdata/kokoro-fastapi-v1_1_zh/output
+KOKORO_MODELS_PATH=/mnt/user/appdata/kokoro-fastapi-zh/models
+KOKORO_VOICES_PATH=/mnt/user/appdata/kokoro-fastapi-zh/voices
 DEFAULT_VOICE=zf_094
 DEFAULT_VOICE_CODE=z
 ```

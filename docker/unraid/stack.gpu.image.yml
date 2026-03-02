@@ -7,8 +7,8 @@ services:
     labels:
       net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-v1.1_zh/master/assets/unraid-icon.png
     volumes:
-      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/models:/app/api/src/models
-      - /mnt/user/appdata/kokoro-fastapi-v1_1_zh/voices:/app/api/src/voices
+      - /mnt/user/appdata/kokoro-fastapi-zh/models:/app/api/src/models
+      - /mnt/user/appdata/kokoro-fastapi-zh/voices:/app/api/src/voices
     ports:
       - "8880:8880"
     environment:
