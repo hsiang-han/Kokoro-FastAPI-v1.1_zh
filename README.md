@@ -35,6 +35,7 @@ Migrated to `hexgrad/Kokoro-82M-v1.1-zh` with baseline adaptation based on the c
 
 ## 快速导航 / Quick Navigation
 
+- [一条命令启动（预构建镜像） / One-command Start](#一条命令启动预构建镜像--one-command-start-prebuilt-image)
 - [测试范围说明 / Testing Scope](#测试范围说明--testing-scope)
 - [源码部署 / Source Deployment](#源码部署--source-deployment)
 - [免源码部署入口 / No-source Deployment Entry](#免源码部署入口--no-source-deployment-entry)
@@ -50,6 +51,40 @@ Migrated to `hexgrad/Kokoro-82M-v1.1-zh` with baseline adaptation based on the c
 
 - Verified in real environment: NVIDIA RTX 50 series (Blackwell) + CUDA stack.
 - Not yet tested in real hardware: ROCm (hardware-limited on our side). Support is currently at configuration/dependency compatibility level; community feedback is welcome.
+
+## 一条命令启动（预构建镜像） / One-command Start (Prebuilt Image)
+
+不编译源码、最简单直接：
+
+```bash
+docker run --rm -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
+```
+
+- 适用：CPU、Apple Silicon（M1/M2/M3）或先快速验证是否可用
+- 启动后访问：`http://localhost:8880/docs`
+
+NVIDIA GPU（同样一条命令）：
+
+```bash
+docker run --rm --gpus all -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-gpu:latest
+```
+
+English:
+
+The simplest way without building from source:
+
+```bash
+docker run --rm -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
+```
+
+- Use this for CPU, Apple Silicon (M1/M2/M3), or a quick smoke test
+- After startup, open: `http://localhost:8880/docs`
+
+NVIDIA GPU (also one command):
+
+```bash
+docker run --rm --gpus all -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-gpu:latest
+```
 
 ## 部署方式一：源码编译部署 / Source Deployment
 
@@ -569,8 +604,8 @@ Refer to the core/config.py file for a full list of variables which can be manag
  Named versions should be pinned for your regular usage.
  Feedback/testing is always welcome
 
-docker run -p 8880:8880 ghcr.io/remsky/kokoro-fastapi-cpu:latest # CPU, or:
-docker run --gpus all -p 8880:8880 ghcr.io/remsky/kokoro-fastapi-gpu:latest  #NVIDIA GPU
+docker run -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest # CPU, or:
+docker run --gpus all -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-gpu:latest  # NVIDIA GPU
 ```
 
 
