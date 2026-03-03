@@ -38,7 +38,7 @@ Migrated to `hexgrad/Kokoro-82M-v1.1-zh` with baseline adaptation based on the c
 - [一条命令启动（预构建镜像） / One-command Start](#一条命令启动预构建镜像--one-command-start-prebuilt-image)
 - [测试范围说明 / Testing Scope](#测试范围说明--testing-scope)
 - [源码部署 / Source Deployment](#源码部署--source-deployment)
-- [免源码部署入口 / No-source Deployment Entry](#免源码部署入口--no-source-deployment-entry)
+- [Unraid Docker Compose 部署 / Unraid Docker Compose Deployment](#unraid-docker-compose-部署--unraid-docker-compose-deployment)
 - [镜像标签策略 / Image Tagging Strategy](#镜像标签策略--image-tagging-strategy)
 - [最小环境变量 / Minimal Environment Variables](#最小环境变量--minimal-environment-variables)
 - [切换到 v1.0（英文模型） / Switch to v1.0](#切换到-v10英文模型--switch-to-v10)
@@ -212,27 +212,13 @@ Follow the steps below. First-time deployment should work directly.
 
 > Tip: If you use M1/M2/M3 Mac, use `docker/cpu`. The current GPU compose depends on CUDA and does not support Apple Silicon.
 
-## 免源码部署入口 / No-source Deployment Entry
+## Unraid Docker Compose 部署 / Unraid Docker Compose Deployment
 
-- 部署文档：`docs/deployment/unraid-and-prebuilt-images.md`
-- Unraid / Compose Stack（GPU）：`docker/unraid/stack.gpu.image.yml`
-- Unraid / Compose Stack（CPU）：`docker/unraid/stack.cpu.image.yml`
-- Unraid CA 模板（统一 CPU/GPU）：`unraid/templates/kokoro-fastapi-zh.xml`
+下面是只用 Unraid 网页界面完成 Docker Compose/Stack 部署的方法。
 
 English:
 
-- Deployment guide: `docs/deployment/unraid-and-prebuilt-images.md`
-- Unraid / Compose Stack (GPU): `docker/unraid/stack.gpu.image.yml`
-- Unraid / Compose Stack (CPU): `docker/unraid/stack.cpu.image.yml`
-- Unraid CA template (unified CPU/GPU): `unraid/templates/kokoro-fastapi-zh.xml`
-
-### Unraid 可视化 Docker Compose 部署（不需要编译源码）
-
-下面是只用 Unraid 网页界面完成部署的方法。
-
-English:
-
-Below is a deployment method using only the Unraid web UI.
+Below is a Docker Compose/Stack deployment method using only the Unraid web UI.
 
 #### 1) 前置条件
 
@@ -272,33 +258,33 @@ English: Paste YAML (choose one)
 name: kokoro-fastapi-zh-gpu
 
 services:
-  kokoro-fastapi:
-    image: ghcr.io/hsiang-han/kokoro-fastapi-zh-gpu:latest
-    container_name: kokoro-fastapi-zh-gpu
-    labels:
-      net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-zh/master/assets/unraid-icon.png
-    volumes:
-      - /mnt/user/appdata/kokoro-fastapi-zh/models:/app/api/src/models
-      - /mnt/user/appdata/kokoro-fastapi-zh/voices:/app/api/src/voices
-    ports:
-      - "8880:8880"
-    environment:
-      - PYTHONPATH=/app:/app/api
-      - USE_GPU=true
-      - PYTHONUNBUFFERED=1
-      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
-      - DEFAULT_VOICE=zf_094
-      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
-      - VOICES_DIR=/app/api/src/voices/v1_1_zh
-      - DEFAULT_VOICE_CODE=z
-      - API_LOG_LEVEL=DEBUG
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    kokoro-fastapi:
+        image: ghcr.io/hsiang-han/kokoro-fastapi-zh-gpu:latest
+        container_name: kokoro-fastapi-zh-gpu
+        labels:
+            net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-zh/master/assets/unraid-icon.png
+        volumes:
+            - /mnt/user/appdata/kokoro-fastapi-zh/models:/app/api/src/models
+            - /mnt/user/appdata/kokoro-fastapi-zh/voices:/app/api/src/voices
+        ports:
+            - "8880:8880"
+        environment:
+            - PYTHONPATH=/app:/app/api
+            - USE_GPU=true
+            - PYTHONUNBUFFERED=1
+            - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+            - DEFAULT_VOICE=zf_094
+            - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+            - VOICES_DIR=/app/api/src/voices/v1_1_zh
+            - DEFAULT_VOICE_CODE=z
+            - API_LOG_LEVEL=DEBUG
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                            count: all
+                            capabilities: [gpu]
 ```
 
 **CPU**
@@ -307,34 +293,34 @@ services:
 name: kokoro-fastapi-zh-cpu
 
 services:
-  kokoro-fastapi:
-    image: ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
-    container_name: kokoro-fastapi-zh-cpu
-    labels:
-      net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-zh/master/assets/unraid-icon.png
-    volumes:
-      - /mnt/user/appdata/kokoro-fastapi-zh/models:/app/api/src/models
-      - /mnt/user/appdata/kokoro-fastapi-zh/voices:/app/api/src/voices
-    ports:
-      - "8880:8880"
-    environment:
-      - PYTHONPATH=/app:/app/api
-      - USE_GPU=false
-      - PYTHONUNBUFFERED=1
-      - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
-      - DEFAULT_VOICE=zf_094
-      - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
-      - VOICES_DIR=/app/api/src/voices/v1_1_zh
-      - DEFAULT_VOICE_CODE=z
-      - API_LOG_LEVEL=DEBUG
+    kokoro-fastapi:
+        image: ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
+        container_name: kokoro-fastapi-zh-cpu
+        labels:
+            net.unraid.docker.icon: https://raw.githubusercontent.com/hsiang-han/Kokoro-FastAPI-zh/master/assets/unraid-icon.png
+        volumes:
+            - /mnt/user/appdata/kokoro-fastapi-zh/models:/app/api/src/models
+            - /mnt/user/appdata/kokoro-fastapi-zh/voices:/app/api/src/voices
+        ports:
+            - "8880:8880"
+        environment:
+            - PYTHONPATH=/app:/app/api
+            - USE_GPU=false
+            - PYTHONUNBUFFERED=1
+            - REPO_ID=hexgrad/Kokoro-82M-v1.1-zh
+            - DEFAULT_VOICE=zf_094
+            - KOKORO_V1_FILE=v1_1_zh/kokoro-v1_1-zh.pth
+            - VOICES_DIR=/app/api/src/voices/v1_1_zh
+            - DEFAULT_VOICE_CODE=z
+            - API_LOG_LEVEL=DEBUG
 ```
 
 #### 4) 部署与验证
 
 1. 点击 `Deploy`
 2. 首次启动会自动下载模型/语音到：
-    - `/mnt/user/appdata/kokoro-fastapi-zh/models/v1_1_zh/`
-    - `/mnt/user/appdata/kokoro-fastapi-zh/voices/v1_1_zh/`
+        - `/mnt/user/appdata/kokoro-fastapi-zh/models/v1_1_zh/`
+        - `/mnt/user/appdata/kokoro-fastapi-zh/voices/v1_1_zh/`
 3. 在容器日志看到 `Uvicorn running on` 后，浏览器打开：`http://<你的UnraidIP>:8880/docs`
 4. 能打开接口文档页面即部署成功
 
@@ -346,8 +332,8 @@ English:
 
 1. Click `Deploy`
 2. First startup will auto-download model/voices to:
-  - `/mnt/user/appdata/kokoro-fastapi-zh/models/v1_1_zh/`
-  - `/mnt/user/appdata/kokoro-fastapi-zh/voices/v1_1_zh/`
+    - `/mnt/user/appdata/kokoro-fastapi-zh/models/v1_1_zh/`
+    - `/mnt/user/appdata/kokoro-fastapi-zh/voices/v1_1_zh/`
 3. Once logs show `Uvicorn running on`, open `http://<your Unraid IP>:8880/docs`
 4. If docs page opens, deployment is successful
 
@@ -596,9 +582,7 @@ Dockerized FastAPI wrapper for [Kokoro-82M](https://huggingface.co/hexgrad/Kokor
  [![Helm Chart](https://img.shields.io/badge/Helm%20Chart-black?style=flat&logo=helm&logoColor=white)](https://github.com/remsky/Kokoro-FastAPI/wiki/Setup-Kubernetes) [![DigitalOcean](https://img.shields.io/badge/DigitalOcean-black?style=flat&logo=digitalocean&logoColor=white)](https://github.com/remsky/Kokoro-FastAPI/wiki/Integrations-DigitalOcean) [![SillyTavern](https://img.shields.io/badge/SillyTavern-black?style=flat&color=red)](https://github.com/remsky/Kokoro-FastAPI/wiki/Integrations-SillyTavern)
 [![OpenWebUI](https://img.shields.io/badge/OpenWebUI-black?style=flat&color=white)](https://github.com/remsky/Kokoro-FastAPI/wiki/Integrations-OpenWebUi)
 
-- Docker 免源码部署 + Unraid 上架说明: `docs/deployment/unraid-and-prebuilt-images.md`
 - Unraid Stack 示例: `docker/unraid/stack.gpu.image.yml` / `docker/unraid/stack.cpu.image.yml`
-- Unraid CA 模板: `unraid/templates/kokoro-fastapi-zh.xml`
 
 ## Get Started
 
