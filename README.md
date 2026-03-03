@@ -61,7 +61,12 @@ docker run --rm -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
 ```
 
 - 适用：CPU、Apple Silicon（M1/M2/M3）或先快速验证是否可用
-- 启动后访问：`http://localhost:8880/docs`
+
+启动后访问：
+
+- API 服务地址：`http://localhost:8880`
+- API 文档地址：`http://localhost:8880/docs`
+- Web 界面地址：`http://localhost:8880/web`
 
 NVIDIA GPU（同样一条命令）：
 
@@ -78,7 +83,12 @@ docker run --rm -p 8880:8880 ghcr.io/hsiang-han/kokoro-fastapi-zh-cpu:latest
 ```
 
 - Use this for CPU, Apple Silicon (M1/M2/M3), or a quick smoke test
-- After startup, open: `http://localhost:8880/docs`
+
+After startup, visit:
+
+- API endpoint: `http://localhost:8880`
+- API docs: `http://localhost:8880/docs`
+- Web UI: `http://localhost:8880/web`
 
 NVIDIA GPU (also one command):
 
