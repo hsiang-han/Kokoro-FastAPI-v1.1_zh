@@ -35,14 +35,13 @@ Migrated to `hexgrad/Kokoro-82M-v1.1-zh` with baseline adaptation based on the c
 
 ## 快速导航 / Quick Navigation
 
-- [一条命令启动（预构建镜像） / One-command Start](#一条命令启动预构建镜像--one-command-start-prebuilt-image)
 - [测试范围说明 / Testing Scope](#测试范围说明--testing-scope)
+- [一条命令启动（预构建镜像） / One-command Start](#一条命令启动预构建镜像--one-command-start-prebuilt-image)
 - [源码部署 / Source Deployment](#源码部署--source-deployment)
 - [Unraid Docker Compose 部署 / Unraid Docker Compose Deployment](#unraid-docker-compose-部署--unraid-docker-compose-deployment)
 - [镜像标签策略 / Image Tagging Strategy](#镜像标签策略--image-tagging-strategy)
 - [最小环境变量 / Minimal Environment Variables](#最小环境变量--minimal-environment-variables)
 - [切换到 v1.0（英文模型） / Switch to v1.0](#切换到-v10英文模型--switch-to-v10)
-- [Get Started](#get-started)
 
 ## 测试范围说明 / Testing Scope
 
